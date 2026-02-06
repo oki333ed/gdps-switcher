@@ -27,7 +27,6 @@ void ServerInfoManager::fetch(GDPSTypes::Server& server) {
                 // This little guy right here explodes GD if run.
                 // I don't know why or how but the json.err() into the format args causes a bad alloc
                 //log::warn("Failed to parse info for {}: {}", server.url, json.err());
-                log::warn("Failed to parse info for {}", server.url);
                 return;
             }
             auto info = json.unwrap();
