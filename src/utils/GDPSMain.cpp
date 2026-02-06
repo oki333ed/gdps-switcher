@@ -282,14 +282,14 @@ void GDPSMain::init() {
         m_serverApiId = ServerAPIEvents::registerServer(server.url, -40).id;
     }
 
-    m_serverChangeListener.bind([this](UpdateServerEvent* e) -> geode::ListenerResult {
-        if (e->m_id != m_serverApiId) {
+    ServerUpdatingEvent().listen([this](ServerUpdatingEventData* e) -> geode::ListenerResult {
+        if (e->getUrl() != m_servers[m_currentServer].url) {
             m_shouldSaveGameData = false;
         } else {
             m_shouldSaveGameData = true;
         }
         return geode::ListenerResult::Propagate;
-    });
+    }).leak();
 }
 
 GDPSMain* GDPSMain::get() {

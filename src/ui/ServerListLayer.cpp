@@ -19,7 +19,7 @@ bool ServerListLayer::init() {
 
     registerWithTouchDispatcher();
 
-    if (m_selectedServer == -1) m_selectedServer = GDPSMain::get()->m_currentServer;
+    if (m_selectedServer == ServerID::None) m_selectedServer = GDPSMain::get()->currentServer();
 
     this->setID("ServerListLayer"_spr);
     this->setKeyboardEnabled(true);
@@ -278,7 +278,7 @@ void ServerListLayer::onSettings(CCObject *sender) {
 
 //region Konami code easter egg
 
-void ServerListLayer::keyDown(enumKeyCodes code) {
+void ServerListLayer::keyDown(enumKeyCodes code, double _) {
   static const std::vector<std::vector<enumKeyCodes>> sequence = {
         {enumKeyCodes::KEY_Up, enumKeyCodes::CONTROLLER_Up,
         enumKeyCodes::CONTROLLER_LTHUMBSTICK_UP, CONTROLLER_RTHUMBSTICK_UP},
@@ -303,10 +303,10 @@ void ServerListLayer::keyDown(enumKeyCodes code) {
         {enumKeyCodes::KEY_Enter, enumKeyCodes::CONTROLLER_Start}};
 
     if (m_konamiPos >= sequence.size())
-        return CCLayer::keyDown(code);
+        return CCLayer::keyDown(code, _);
 
     if (m_konamiPos < 3) {
-        CCLayer::keyDown(code);
+        CCLayer::keyDown(code, _);
     }
 
     const auto &validCodes = sequence[m_konamiPos];

@@ -1,3 +1,9 @@
+# 1.4.12
+### Migrate to Geode v5
+- <cg>Migrated to Geode v5. (5.0.0-alpha.1)</c>
+- <cg>Updated to GD 2.2081.</c>
+- <cy>Internal changes.</c>
+
 # 1.4.11
 ### Sound effect separation
 - <cy>Separate sound effects per server</c>

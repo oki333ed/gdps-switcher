@@ -49,7 +49,9 @@ void GSGManager::updateFileNames() {
     for (auto manager : Fields::m_managers) {
         if (!manager) continue;
         const auto main = GDPSMain::get();
-        auto server = main->m_servers[main->m_currentServer];
+        auto res = main->getCurrentServer();
+        if (!res) log::error("{}", res.unwrapErr());
+        auto server = res.unwrap(); // We probably should just crash if the result is Err.
         const auto dir = geode::dirs::getSaveDir() / "gdpses" / server.saveDir;
         std::error_code err;
         if (!std::filesystem::exists(dir, err)) {

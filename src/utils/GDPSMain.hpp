@@ -8,10 +8,14 @@
 #include <mutex>
 #include <shared_mutex>
 
+namespace ServerID {
+    constexpr int RobTop = -2;
+    constexpr int None = -1;
+}
+
 class GDPSMain {
     friend class GSGManager;
     protected:
-        geode::EventListener<EventFilter<UpdateServerEvent>> m_serverChangeListener;
         static GDPSMain *m_instance;
         std::vector<std::string> m_issues = {};
         void init();
@@ -41,7 +45,7 @@ class GDPSMain {
 
         // One of these days I will make this shit private without breaking everything.
         std::map<int, GDPSTypes::Server> m_servers;
-        int m_currentServer = -2;
+        int m_currentServer = ServerID::RobTop;
         int m_serverApiId = 0;
         bool m_shouldSaveGameData = true;
         bool m_switching = false;

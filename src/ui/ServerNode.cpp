@@ -9,11 +9,11 @@ bool ServerNode::init(CCSize size, ServerListLayer* list, int index) {
     if (!CCNode::init()) return false;
     m_index = index;
 
-    m_listener.bind([this](LoadDataEvent *event) {
+    m_listener = LoadDataEvent().listen([this](LoadDataEventData* data) {
         updateInfo();
         return ListenerResult::Propagate;
     });
-
+    
     this->m_listLayer = list;
     this->setID("server-node");
     this->m_obContentSize = size;

@@ -1,3 +1,12 @@
+//  This file probably used to be for an API with other mods.
+// That functionality is no longer supported.
+//
+//  Use ServerAPI and it's ServerAPIEvents.hpp header instead.
+//
+//  ServerAPI uses a different system of server identification
+// while GDPS Switcher uses an identification system more in line
+// for serialization of basic server information to disk.
+
 #pragma once
 
 #ifndef GDPSTYPES_HPP
@@ -26,33 +35,33 @@ namespace GDPSTypes {
         ServerInvalidity(uint16_t val) : value(static_cast<ServerInvalidity::I>(val)) {}
         ServerInvalidity(ServerInvalidity::I val) : value(val) {}
 
-        operator I() {
+        operator I() const {
             return value;
         }
 
         // Returns true if value != Valid, may not be the right design.
-        operator bool() {
+        operator bool() const {
             return static_cast<bool>(value);
         }
 
-        ServerInvalidity operator|(I rhs) {
+        ServerInvalidity operator|(I rhs) const {
             return ServerInvalidity(
                 static_cast<uint16_t>(value) | static_cast<uint16_t>(rhs)
             );
         }
 
-        ServerInvalidity operator&(I rhs) {
+        ServerInvalidity operator&(I rhs) const {
             return ServerInvalidity(
                 static_cast<uint16_t>(value) & static_cast<uint16_t>(rhs)
             );
         }
 
-        bool operator==(I rhs) {
+        bool operator==(I rhs) const {
             return static_cast<uint16_t>(value) == static_cast<uint16_t>(rhs);
         }
 
-        bool operator!=(I rhs) {
-            return static_cast<uint16_t>(value) != static_cast<uint16_t>(rhs);
+        bool operator!=(I rhs) const {
+            return !(*this == rhs);
         }
 
         ServerInvalidity& operator|=(I rhs) {
@@ -63,6 +72,62 @@ namespace GDPSTypes {
         ServerInvalidity& operator&=(I rhs) {
             value = *this & rhs;
             return *this;
+        }
+    };
+
+    // Get rid of all the -2 and -1 magic numbers everywhere.
+    // -2 is the built-in (RobTop) servers and -1 is no server.
+    struct ServerID {
+        enum _ID : int {
+            RobTop = -2,
+            None = -1,
+            GDPS = 0
+        }; using I = _ID;
+
+        I value;
+
+        operator I() const {
+            return value;
+        }
+
+        operator int() const {
+            return static_cast<int>(value);
+        }
+
+        bool operator==(int rhs) const {
+            return static_cast<int>(value) == rhs;
+        }
+
+        bool operator!=(int rhs) const {
+            return !(*this == rhs);
+        }
+
+        operator bool() const {
+            return static_cast<int>(value) >= static_cast<int>(ServerID::GDPS) || value == ServerID::RobTop;
+        }
+
+        inline bool isPrivateServer() {
+            return static_cast<int>(value) > -1;
+        }
+
+        inline bool isGDPS() {
+            return isPrivateServer();
+        }
+
+        inline bool isRobTop() {
+            return value == I::RobTop;
+        }
+
+        inline bool isBuiltIn() {
+            return isRobTop();
+        }
+
+        inline bool isNone() {
+            return value == I::None;
+        }
+
+        inline bool noServer() {
+            return isNone();
         }
     };
 
