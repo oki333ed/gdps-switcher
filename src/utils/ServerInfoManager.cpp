@@ -24,10 +24,13 @@ void ServerInfoManager::fetch(GDPSTypes::Server& server) {
         [this, &server] (web::WebResponse value) {
             auto json = value.json();
             if (json.isErr()) {
-                log::warn("Failed to parse info for {}: {}", server.url, json.err());
+                // This little guy right here explodes GD if run.
+                // I don't know why or how but the json.err() into the format args causes a bad alloc
+                //log::warn("Failed to parse info for {}: {}", server.url, json.err());
+                log::warn("Failed to parse info for {}", server.url);
                 return;
             }
-            auto info = json.unwrapOrDefault();
+            auto info = json.unwrap();
             server.motd = info["motd"].asString().unwrapOr("No MOTD found.");
             server.icon = info["icon"].asString().unwrapOr("");
             // serverData.modPolicy = info["mods"]["policy"].asString().unwrapOr(serverData.modPolicy);

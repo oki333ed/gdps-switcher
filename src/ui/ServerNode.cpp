@@ -10,10 +10,14 @@ bool ServerNode::init(CCSize size, ServerListLayer* list, int index) {
     m_index = index;
 
     m_listener = LoadDataEvent().listen([this](LoadDataEventData* data) {
+        if (data->getServer().id != m_server.id) {
+            return ListenerResult::Propagate;
+        }
+
         updateInfo();
         return ListenerResult::Propagate;
     });
-    
+
     this->m_listLayer = list;
     this->setID("server-node");
     this->m_obContentSize = size;

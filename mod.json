@@ -31,7 +31,7 @@
 		}
 	},
 	"dependencies": {
-		"km7dev.server_api": "2.2.0"
+		"km7dev.server_api": "3.0.0"
 	},
 	"incompatibilities": {
 		"capeling.geometry-dash-lunar": {
